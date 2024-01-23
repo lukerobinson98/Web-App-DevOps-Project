@@ -37,6 +37,31 @@ For the application to succesfully run, you need to install the following packag
 - SQLAlchemy (version 2.0.21)
 - werkzeug (version 2.2.3)
 
+### Containerisation using Docker and clean up
+
+1. To containerise first make sure the dockerfile is saved in the directory
+2. Then run the command docker build -t <image-name> .
+3. To run the Docker container locally execute docker run -p 8050:5000 <image-name>
+4. Make sure you are logged into Docker Hub and then push the image using docker push <docker-hub-username>/<image-name>:<tag>
+5. You can then check the image has succesfully pushed by logging into Docker Hub and seeing if it is there
+6. To test pulling the image from Docker Hub run the commands docker pull <docker-hub-username>/<image-name>:<tag> and then docker run -p 5000:5000 <docker-hub-username>/<image-name>:<tag>
+
+#### Image Information
+- Image Name: 'web-app-image'
+- Tags: 'v1'
+- Docker Hub Repo: 'lukerobinson98/web-app-image'
+
+### Clean Up Process
+
+1. To clean up unnecessary containers first run docker ps -a to list all containers
+2. Then run docker rm <container-id>, replacing <container-id> with the id of any unnecessary containers
+3. To clean up unnecessary images run docker images -a
+4. Then remove any unnecessary images using docker rmi <image-id>, replacing <image-id> with the id of any unnecessary images
+
+### Defining Networking Services with IaC
+
+- **networking-module:** Manages the Azure Networking Services for the AKS cluster.
+
 ### Usage
 
 To run the application, you simply need to run the `app.py` script in this repository. Once the application starts you should be able to access it locally at `http://127.0.0.1:5000`. Here you will be meet with the following two pages:
@@ -44,6 +69,8 @@ To run the application, you simply need to run the `app.py` script in this repos
 1. **Order List Page:** Navigate to the "Order List" page to view all existing orders. Use the pagination controls to navigate between pages.
 
 2. **Add New Order Page:** Click on the "Add New Order" tab to access the order form. Complete all required fields and ensure that your entries meet the specified criteria.
+
+
 
 ## Technology Stack
 
