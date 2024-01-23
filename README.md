@@ -40,11 +40,11 @@ For the application to succesfully run, you need to install the following packag
 ### Containerisation using Docker and clean up
 
 1. To containerise first make sure the dockerfile is saved in the directory
-2. Then run the command docker build -t <image-name> .
-3. To run the Docker container locally execute docker run -p 8050:5000 <image-name>
-4. Make sure you are logged into Docker Hub and then push the image using docker push <docker-hub-username>/<image-name>:<tag>
+2. Then run the command docker build -t image-name .
+3. To run the Docker container locally execute docker run -p 8050:5000 image-name
+4. Make sure you are logged into Docker Hub and then push the image using docker push docker-hub-username/image-name:tag
 5. You can then check the image has succesfully pushed by logging into Docker Hub and seeing if it is there
-6. To test pulling the image from Docker Hub run the commands docker pull <docker-hub-username>/<image-name>:<tag> and then docker run -p 5000:5000 <docker-hub-username>/<image-name>:<tag>
+6. To test pulling the image from Docker Hub run the commands docker pull docker-hub-username/image-name:tag and then docker run -p 5000:5000 docker-hub-username/image-name:tag
 
 #### Image Information
 - Image Name: 'web-app-image'
@@ -54,9 +54,9 @@ For the application to succesfully run, you need to install the following packag
 ### Clean Up Process
 
 1. To clean up unnecessary containers first run docker ps -a to list all containers
-2. Then run docker rm <container-id>, replacing <container-id> with the id of any unnecessary containers
+2. Then run docker rm container-id, replacing container-id with the id of any unnecessary containers
 3. To clean up unnecessary images run docker images -a
-4. Then remove any unnecessary images using docker rmi <image-id>, replacing <image-id> with the id of any unnecessary images
+4. Then remove any unnecessary images using docker rmi image-id, replacing image-id with the id of any unnecessary images
 
 ### Defining Networking Services with IaC
 
