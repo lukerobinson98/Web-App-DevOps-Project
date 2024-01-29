@@ -115,6 +115,41 @@ Please find the **variables.tf**, **main.tf** and **outputs.tf** files in the AK
     - aks_cluster_name: Name of the provisioned AKS cluster.
     - aks_cluster_id: ID of the AKS cluster.
     - aks_kubeconfig: Kubernetes configuration file for managing the AKS cluster.
+ 
+### Creating an AKS Cluster with IaC using Terraform
+
+#### **main.tf**
+
+The **main.tf** file serves as the main configuration file and is responsible for setting up the Azure provider, integrating networking and cluster modules, and defining input variables.
+
+In this section, the Azure provider is configured using the specified service principal credentials and subscription details.
+
+#### networking-module integration
+
+The networking module is integrated into the project, providing a reusable and organized way to define the Azure networking resources.
+
+#### aks-cluster-module integration
+
+The cluster module is integrated, allowing for the provisioning of an Azure Kubernetes Service (AKS) cluster. Input variables are passed, referencing the outputs from the networking module.
+
+#### Input Variables
+
+The following input variables are defined in the variables.tf file:
+
+- aks_cluster_name: The name of the AKS cluster.
+- cluster_location: The Azure region where the cluster will be deployed.
+- dns_prefix: The DNS prefix of the cluster.
+- kubernetes_version: Kubernetes version the cluster will use.
+- service_principal_client_id: The client ID of the service principal associated with the cluster.
+- service_principal_secret: The client secret for the service principal.
+
+#### Variables referencing the output variables from the networking module:
+
+- resource_group_name: Name of the Azure Resource Group.
+- vnet_id: ID of the VNet.
+- control_plane_subnet_id: ID of the control plane subnet.
+- worker_node_subnet_id: ID of the worker node subnet.
+- aks_nsg_id: The ID of the Network Security Group.
       
 ### Usage
 
