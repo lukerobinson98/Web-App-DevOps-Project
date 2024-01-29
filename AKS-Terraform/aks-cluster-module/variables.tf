@@ -50,3 +50,8 @@ variable "worker_node_subnet_id" {
     description = "ID of the worker node subnet"
     type = string
 }
+
+variable "aks_nsg_id" {
+  description = "The ID of the Network Security Group"
+  type        = string
+}

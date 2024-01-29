@@ -11,5 +11,5 @@ output "aks_cluster_id" {
 
 output "aks_kubeconfig" {
     description = "The Kubernetes configuration file for the provisioned AKS cluster"
-    value = azurerm_kubernetes_cluster.aks_cluster.kube_config[0].raw_config
+    value = azurerm_kubernetes_cluster.aks_cluster.kube_config[0]["raw_config"]
 }
