@@ -16,7 +16,7 @@ spec:
       - name: flask-app-container
         image: lukerobinson98/web-app-image:v1
         ports:
-        - containerPort: 5000
+        - containerPort: 8050
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -34,5 +34,5 @@ spec:
   ports: 
     - protocol: TCP
       port: 80
-      targetPort: 5000
+      targetPort: 8050
   type: ClusterIP
