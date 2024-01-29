@@ -179,7 +179,7 @@ The following input variables are defined in the variables.tf file:
   - Ensures a maximum of one pod deploys at a time while maintaining application availability.
   - Facilitates zero-downtime updates and smooth transitions between different versions of the application.
 
-#### Testing and Validation**
+#### Testing and Validation
 
 - **Testing Process:**
   - Conducted thorough testing of the deployed application within the AKS cluster.
@@ -206,7 +206,7 @@ The following input variables are defined in the variables.tf file:
   - Implement HTTPS and authentication mechanisms for external access.
   - Consider using Azure Application Gateway or a similar service for additional security.
 
-####Additional Considerations
+#### Additional Considerations
 
 - **Secure Access:**
   - Implement secure access mechanisms, such as HTTPS and authentication, for both internal and external access.
