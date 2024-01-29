@@ -44,7 +44,7 @@ For the application to succesfully run, you need to install the following packag
 3. To run the Docker container locally execute docker run -p 8050:5000 image-name.
 4. Make sure you are logged into Docker Hub and then push the image using docker push docker-hub-username/image-name:tag.
 5. You can then check the image has succesfully pushed by logging into Docker Hub and seeing if it is there.
-6. To test pulling the image from Docker Hub run the commands docker pull docker-hub-username/image-name:tag and then docker run -p 5000:5000 docker-hub-username/image-name:tag.
+6. To test pulling the image from Docker Hub run the commands docker pull docker-hub-username/image-name:tag and then docker run -p 8050:5000 docker-hub-username/image-name:tag.
 
 #### Image Information
 - Image Name: 'web-app-image'.
@@ -150,7 +150,72 @@ The following input variables are defined in the variables.tf file:
 - control_plane_subnet_id: ID of the control plane subnet.
 - worker_node_subnet_id: ID of the worker node subnet.
 - aks_nsg_id: The ID of the Network Security Group.
-      
+
+### Kubernetes Deployment Documentation
+
+#### Deployment and Service Manifests
+
+**Deployment Manifest (deployment.yaml)**
+
+- The `deployment.yaml` file defines the specifications for deploying the Flask application within the AKS cluster.
+- Key Concepts:
+  - **Replicas:** Specifies the desired number of application instances (pods) to run concurrently (set to 2 for scalability and high availability).
+  - **Selector and Labels:** Utilizes labels (e.g., app: flask-app) for pod management, ensuring proper identification by the Deployment.
+  - **Container Image:** Points to the Docker Hub container image (lukerobinson98/web-app-image:v1).
+  - **Ports:** Exposes port 8050 within the pod for internal communication.
+
+**Service Manifest (service.yaml)**
+
+- The `service.yaml` file defines the Kubernetes Service responsible for routing internal communication.
+- Key Concepts:
+  - **Selector:** Matches the labels (app: flask-app) defined in the Deployment, ensuring efficient traffic routing.
+  - **Port Configuration:** Uses TCP protocol on port 80 for internal communication within the AKS cluster, forwarding to port 8050 in the pods.
+  - **Service Type:** Set to ClusterIP, designating it as an internal service within the AKS cluster.
+
+#### Deployment Strategy
+
+- **Rolling Update Strategy:**
+  - Chose the Rolling Update deployment strategy for seamless application updates.
+  - Ensures a maximum of one pod deploys at a time while maintaining application availability.
+  - Facilitates zero-downtime updates and smooth transitions between different versions of the application.
+
+#### Testing and Validation**
+
+- **Testing Process:**
+  - Conducted thorough testing of the deployed application within the AKS cluster.
+  - Verified the health and status of pods and services.
+  - Tested the functionality of the application, paying particular attention to the orders table and Add Order functionality.
+
+- **Validation:**
+  - Ensured that the pods are running as expected and responding to requests.
+  - Verified that the services are correctly exposed and accessible within the AKS cluster.
+ 
+#### Application Distribution Plan
+
+**Internal Distribution**
+
+- To make the application accessible to internal users:
+  - Use Kubernetes Services to expose the application internally.
+  - Share the service URL or DNS with team members.
+  - Consider implementing role-based access control (RBAC) to restrict access if needed.
+
+**External Distribution**
+
+- For external access:
+  - Use Kubernetes Ingress to expose the application securely.
+  - Implement HTTPS and authentication mechanisms for external access.
+  - Consider using Azure Application Gateway or a similar service for additional security.
+
+####Additional Considerations
+
+- **Secure Access:**
+  - Implement secure access mechanisms, such as HTTPS and authentication, for both internal and external access.
+  - Regularly update secrets and credentials used in the application.
+
+- **Documentation:**
+  - Keep documentation up-to-date for team members and external users.
+  - Document any changes or updates made to the deployment configuration.
+
 ### Usage
 
 To run the application, you simply need to run the `app.py` script in this repository. Once the application starts you should be able to access it locally at `http://127.0.0.1:5000`. Here you will be meet with the following two pages:
