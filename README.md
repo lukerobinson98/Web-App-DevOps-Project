@@ -58,7 +58,7 @@ For the application to succesfully run, you need to install the following packag
 3. To clean up unnecessary images run docker images -a.
 4. Then remove any unnecessary images using docker rmi image-id, replacing image-id with the id of any unnecessary images.
 
-### Defining Networking Services with IaC
+### Defining Networking Services with IaC using Terraform
 
 #### **networking-module:** Manages the Azure Networking Services for the AKS cluster.
 
@@ -88,13 +88,34 @@ Please find the **variables.tf**, **main.tf** and **outputs.tf** files in the AK
     - Defined CIDR blocks for subnets to ensure proper IP address allocation.
     - Used cidrsubnet function to calculate subnet address ranges.
 
-- Output variables defined in **outputs.tf**
+- Output variables defined in **outputs.tf**:
     - vnet_id: ID of the VNet.
     - control_plane_subnet_id: ID of the control plane subnet.
     - worker_node_subnet_id: ID of the worker node subnet.
     - networking_resource_group_name: Name of the Azure Resource Group.
     - aks_nsg_id: ID of the Network Security Group.
 
+### Defining an AKS Cluster with IaC using Terraform
+
+#### **aks-cluster-module:** Manages the defining and provisioning of the AKS cluster.
+
+Please find the **variables.tf**, **main.tf** and **outputs.tf** files in the AKS-Terraform/aks-cluster-module folder of this repo
+
+- Input variables defined in **variables.tf**:
+    - aks_cluster_name: Name of the AKS cluster.
+    - cluster_location: Azure region where the AKS cluster will be deployed.
+    - dns_prefix: DNS prefix of the cluster.
+    - kubernetes_version: Kubernetes version for the cluster.
+    - service_principal_client_id: Client ID for the service principal.
+    - service_principal_secret: Client Secret for the service principal.
+
+- **main.tf**: Defines Azure resources for provisioning an AKS cluster, including the AKS cluster itself, node pool, and service principal.
+  
+- Output variables defined in **outputs.tf**:
+    - aks_cluster_name: Name of the provisioned AKS cluster.
+    - aks_cluster_id: ID of the AKS cluster.
+    - aks_kubeconfig: Kubernetes configuration file for managing the AKS cluster.
+      
 ### Usage
 
 To run the application, you simply need to run the `app.py` script in this repository. Once the application starts you should be able to access it locally at `http://127.0.0.1:5000`. Here you will be meet with the following two pages:
