@@ -10,10 +10,23 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '3.1.x'
+    installationPath: $(Agent.ToolsDirectory)/dotnet
 
 - script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+    # Restore dependencies, build, and publish application
+    dotnet restore
+    dotnet build --configuration Release
+    dotnet publish --configuration Release --output $(Build.ArtifactStagingDirectory)
+  displayName: 'Build and Publish'
+
+- task: Docker@2
+  inputs:
+    containerRegistry: 'devops-project-docker-sc'  
+    repository: 'lukerobinson98/web-app-image'
+    command: 'buildAndPush'
+    Dockerfile: '$(Build.SourcesDirectory)/dockerfile'
+    tags: 'v1'  
