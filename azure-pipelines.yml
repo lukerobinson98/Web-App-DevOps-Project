@@ -22,7 +22,7 @@ steps:
   inputs: 
     action: 'deploy'
     connectionType: 'azureResourceManager'
-    azureSubscriptionConnection: 'devops-project-docker-sc'
+    azureSubscriptionConnection: 'aks-service-connection'
     azureResourceGroup: 'networking-resource-group'
     kubernetesCluster: 'terraform-aks-cluster'
     manifests: 'application-manifest.yaml'
