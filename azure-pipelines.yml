@@ -22,7 +22,6 @@ steps:
   inputs: 
     action: 'deploy'
     connectionType: 'azureResourceManager'
-    azureSubscriptionEndpoint: 'Docker Hub'
     azureSubscriptionConnection: 'aks-service-connection'
     azureResourceGroup: 'networking-resource-group'
     kubernetesCluster: 'terraform-aks-cluster'
