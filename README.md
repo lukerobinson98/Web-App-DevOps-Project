@@ -230,20 +230,7 @@ The following input variables are defined in the variables.tf file:
 
 **Sample Build Pipeline Configuration**
 
-trigger:
-  main
-
-pool:
-  vmImage: ubuntu-latest
-
-steps:
-  task: Docker@2
-  inputs:
-    containerRegistry: 'Docker Hub'  # Your service connection name
-    repository: 'lukerobinson98/web-app-image'  # Your Docker Hub repository
-    command: 'buildAndPush'
-    Dockerfile: '**/dockerfile'  # Path to your Dockerfile in GitHub repo
-    tags: 'v1'  # Tag for the image
+![image](https://github.com/lukerobinson98/Web-App-DevOps-Project/assets/150971337/f9d23a5e-2088-4d1b-af14-5a2a9bb7c904)
 
 #### Release Pipeline
 
@@ -253,14 +240,8 @@ steps:
 
 **Sample Release Pipeline Configuration**
 
-task: KubernetesManifest@1
-  inputs: 
-    action: 'deploy'
-    connectionType: 'azureResourceManager'
-    azureSubscriptionConnection: 'aks-service-connection'
-    azureResourceGroup: 'networking-resource-group'
-    kubernetesCluster: 'terraform-aks-cluster'
-    manifests: 'manifests/application-manifest.yaml'
+![image](https://github.com/lukerobinson98/Web-App-DevOps-Project/assets/150971337/85a22b45-52b1-49ad-b06e-74b3c7370c02)
+
 
 #### Integration with Docker Hub and AKS
 
