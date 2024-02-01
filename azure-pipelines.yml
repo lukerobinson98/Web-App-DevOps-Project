@@ -11,7 +11,7 @@ pool:
 
 variables:
   imageName: 'web-app-image'
-  dockerfilePath: '/dockerfile'
+  dockerfilePath: 'Users/lukerobinson/Downloads/AzureDevOps/Web-App-DevOps-Project/dockerfile/Dockerfile'
 
 steps:
 - task: Docker@2
