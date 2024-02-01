@@ -229,15 +229,15 @@ The following input variables are defined in the variables.tf file:
 - The build artifacts are stored for use in the release pipeline.
 
 **Sample Build Pipeline Configuration**
-'''
-#trigger:
-- main
+
+trigger:
+  main
 
 pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: Docker@2
+  task: Docker@2
   inputs:
     containerRegistry: 'Docker Hub'  # Your service connection name
     repository: 'lukerobinson98/web-app-image'  # Your Docker Hub repository
@@ -252,8 +252,8 @@ steps:
 - The AKS service connection (aks-service-connection) is utilized for the deployment.
 
 **Sample Release Pipeline Configuration**
-'''
-#- task: KubernetesManifest@1
+
+task: KubernetesManifest@1
   inputs: 
     action: 'deploy'
     connectionType: 'azureResourceManager'
