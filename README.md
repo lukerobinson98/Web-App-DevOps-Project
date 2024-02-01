@@ -229,8 +229,8 @@ The following input variables are defined in the variables.tf file:
 - The build artifacts are stored for use in the release pipeline.
 
 **Sample Build Pipeline Configuration**
-
-trigger:
+'''
+#trigger:
 - main
 
 pool:
@@ -252,8 +252,8 @@ steps:
 - The AKS service connection (aks-service-connection) is utilized for the deployment.
 
 **Sample Release Pipeline Configuration**
-
-- task: KubernetesManifest@1
+'''
+#- task: KubernetesManifest@1
   inputs: 
     action: 'deploy'
     connectionType: 'azureResourceManager'
