@@ -216,6 +216,65 @@ The following input variables are defined in the variables.tf file:
   - Keep documentation up-to-date for team members and external users.
   - Document any changes or updates made to the deployment configuration.
 
+### Azure DevOps CI/CD Pipeline Configuration
+
+#### Source Repository
+- This project is hosted on [GitHub](https://github.com/lukerobinson98/Web-App-DevOps-Project)
+- The main branch triggers the CI/CD pipeline on Azure DevOps.
+
+#### Build Pipeline
+- The build pipeline is defined in the `azure-pipelines.yml` file.
+- It uses an Ubuntu agent for building and publishing the application.
+- The Docker image is built and pushed to Docker Hub with the tag 'v1'.
+- The build artifacts are stored for use in the release pipeline.
+
+**Sample Build Pipeline Configuration**
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: Docker@2
+  inputs:
+    containerRegistry: 'Docker Hub'  # Your service connection name
+    repository: 'lukerobinson98/web-app-image'  # Your Docker Hub repository
+    command: 'buildAndPush'
+    Dockerfile: '**/dockerfile'  # Path to your Dockerfile in GitHub repo
+    tags: 'v1'  # Tag for the image
+
+#### Release Pipeline
+
+- The release pipeline is configured to deploy the application to an Azure Kubernetes Service (AKS) cluster.
+- It uses the KubernetesManifest task to deploy the application using the manifest file (application-manifest.yaml).
+- The AKS service connection (aks-service-connection) is utilized for the deployment.
+
+**Sample Release Pipeline Configuration**
+
+- task: KubernetesManifest@1
+  inputs: 
+    action: 'deploy'
+    connectionType: 'azureResourceManager'
+    azureSubscriptionConnection: 'aks-service-connection'
+    azureResourceGroup: 'networking-resource-group'
+    kubernetesCluster: 'terraform-aks-cluster'
+    manifests: 'manifests/application-manifest.yaml'
+
+#### Integration with Docker Hub and AKS
+
+- A service connection to Docker Hub (Docker Hub) is configured to authenticate and push Docker images.
+- An AKS service connection (aks-service-connection) is established for secure communication between Azure DevOps and the AKS cluster.
+
+#### Testing Functionality
+
+1. After each CI/CD run, monitor the Azure DevOps pipeline logs for successful builds and releases.
+2. Validate the Docker image by checking Docker Hub for the latest pushed image with the 'v1' tag.
+3. Monitor the AKS cluster for successful deployments.
+4. Initiate port forwarding using kubectl to access the application locally: kubectl port-forward <pod-name> 8080:5000.
+5. Access the application at http://localhost:8080 and perform functional testing.
+
 ### Usage
 
 To run the application, you simply need to run the `app.py` script in this repository. Once the application starts you should be able to access it locally at `http://127.0.0.1:5000`. Here you will be meet with the following two pages:
