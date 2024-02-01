@@ -7,26 +7,17 @@ trigger:
 - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
+
+variables:
+  imageName: 'web-app-image'
+  dockerfilePath: '/dockerfile'
 
 steps:
-- task: UseDotNet@2
-  inputs:
-    packageType: 'sdk'
-    version: '3.1.x'
-    installationPath: $(Agent.ToolsDirectory)/dotnet
-
-- script: |
-    # Restore dependencies, build, and publish application
-    dotnet restore
-    dotnet build --configuration Release
-    dotnet publish --configuration Release --output $(Build.ArtifactStagingDirectory)
-  displayName: 'Build and Publish'
-
 - task: Docker@2
+  displayName: 'Build Docker Image'
   inputs:
-    containerRegistry: 'devops-project-docker-sc'  
-    repository: 'lukerobinson98/web-app-image'
-    command: 'buildAndPush'
-    Dockerfile: '$(Build.SourcesDirectory)/dockerfile'
-    tags: 'v1'  
+    containerRegistry: 'devops-project-docker-sc'  # Update with your Docker registry service connection
+    repository: $(imageName)
+    command: 'build'
+    Dockerfile: $(dockerfilePath)
