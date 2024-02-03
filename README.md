@@ -256,6 +256,116 @@ The following input variables are defined in the variables.tf file:
 4. Initiate port forwarding using kubectl to access the application locally: kubectl port-forward <pod-name> 8080:5000.
 5. Access the application at http://localhost:8080 and perform functional testing.
 
+
+## AKS Cluster Monitoring Strategy
+
+### Average Node CPU Usage
+
+![image](https://github.com/lukerobinson98/Web-App-DevOps-Project/assets/150971337/f9f9fc89-db97-4b5a-bf24-82710da7a235)
+
+This chart tracks the CPU usage of AKS cluster nodes. It is crucial for identifying potential performance bottlenecks and ensuring efficient resource allocation.
+
+### Average Pod Count
+
+![image](https://github.com/lukerobinson98/Web-App-DevOps-Project/assets/150971337/54eb32a5-e950-4d89-9704-90584fa88864)
+
+The average pod count chart provides insights into the workload distribution within the AKS cluster. Monitoring this metric is essential for evaluating cluster capacity.
+
+### Used Disk Percentage
+
+![image](https://github.com/lukerobinson98/Web-App-DevOps-Project/assets/150971337/f9b04462-6dfe-4cb8-a9b5-a73858810702)
+
+Tracking disk usage is critical to preventing storage-related issues. This chart visualizes the percentage of used disk space in the AKS cluster.
+
+### Bytes Read and Written per Second
+
+![image](https://github.com/lukerobinson98/Web-App-DevOps-Project/assets/150971337/bc9615bb-e4f3-4b39-af6e-4e5704415543)
+
+Monitoring data I/O is crucial for identifying performance issues. This chart shows the data transfer rates within the AKS cluster.
+
+### Log Analytics Logs
+
+#### Average Node CPU Usage Percentage per Minute
+
+```kql
+Perf
+| where ObjectName == "K8SNode" and CounterName == "cpuUsagePercentage"
+| summarize AvgCPUUsage = avg(CounterValue) by bin(TimeGenerated, 1m), Computer
+| project TimeGenerated, Node = Computer, AvgCPUUsage
+```
+This log configuration captures node-level CPU usage at a granular level, logged per minute.
+
+#### Average Node Memory Usage Percentage per Minute
+
+```kql
+Perf
+| where ObjectName == "K8SNode" and CounterName == "memoryUsagePercentage"
+| summarize AvgMemoryUsage = avg(CounterValue) by bin(TimeGenerated, 1m), Computer
+| project TimeGenerated, Node = Computer, AvgMemoryUsage
+```
+Similar to CPU usage, this log captures node-level memory usage per minute.
+
+#### Pods Counts with Phase
+
+```kql
+KubePodInventory
+| summarize Count by ClusterName, ClusterId, Namespace, PodName, PodPhase
+```
+This log configuration provides information on the count of pods with different phases, such as Pending, Running, or Terminating.
+
+#### Find Warning Value in Container Logs
+
+```kql
+ContainerLog
+| where LogEntry contains "warning"
+```
+This log configuration searches for warning values in container logs, helping proactively detect issues or errors.
+
+#### Monitoring Kubernetes Events
+
+```kql
+KubeEvents
+| project TimeGenerated, Namespace, ClusterName, Message
+| order by TimeGenerated desc
+```
+This log configuration monitors Kubernetes events, providing insights into pod scheduling, scaling activities, and errors.
+
+### Alert Configurations
+
+#### Used Disk Percentage Alert:
+- Condition: Used Disk Percentage > 90%
+- Frequency: Every 5 minutes
+- Lookback Period: 15 minutes
+- Actions: Email notification
+  
+#### CPU Usage Alert:
+- Condition: CPU Usage > 80%
+- Frequency: Every 5 minutes
+- Lookback Period: 15 minutes
+- Actions: Email notification
+  
+#### Memory Working Set Percentage Alert:
+- Condition: Memory Working Set Percentage > 80%
+- Frequency: Every 5 minutes
+- Lookback Period: 15 minutes
+- Actions: Email notification
+- Alarm Response Procedures
+
+#### Used Disk Percentage Alert:
+- Check the affected nodes for resource-intensive processes.
+- Scale resources or allocate additional capacity as needed.
+- Investigate and resolve any disk-related issues.
+
+#### CPU Usage and Memory Alerts:
+- Identify resource-hungry pods or containers.
+- Scale resources or allocate additional capacity.
+- Investigate and optimize resource utilization.
+- Implement autoscaling if needed.
+
+#### Kubernetes Events Alert:
+- Investigate events with high EventLevels.
+- Troubleshoot and resolve issues related to pod scheduling, scaling, or errors.
+
 ### Usage
 
 To run the application, you simply need to run the `app.py` script in this repository. Once the application starts you should be able to access it locally at `http://127.0.0.1:5000`. Here you will be meet with the following two pages:
@@ -263,8 +373,6 @@ To run the application, you simply need to run the `app.py` script in this repos
 1. **Order List Page:** Navigate to the "Order List" page to view all existing orders. Use the pagination controls to navigate between pages.
 
 2. **Add New Order Page:** Click on the "Add New Order" tab to access the order form. Complete all required fields and ensure that your entries meet the specified criteria.
-
-
 
 ## Technology Stack
 
