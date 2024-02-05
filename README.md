@@ -366,6 +366,54 @@ This log configuration monitors Kubernetes events, providing insights into pod s
 - Investigate events with high EventLevels.
 - Troubleshoot and resolve issues related to pod scheduling, scaling, or errors.
 
+## AKS Integration with Azure Key Vault for Secrets Management
+
+### Azure Key Vault Setup
+
+- Created a Key vault in azure with the name **aks-cluster-kv-luke**
+- Added an access policy to grant necessary permissions, assigning role 'Key Vault Secrets Officer' to the Managed Identity of the AKS Cluster
+
+### Stored Secrets in Key Vault
+
+- **server-name**: Server name.
+- **server-username**: Server username.
+- **server-password**: Server password.
+- **database-name**: Database name.
+
+### AKS Integration with Key Vault
+
+- Enabled Managed Identity for AKS Cluster
+- Assigned necessary permissions to Managed Identity
+- Modified application code to integrate Azure Identity and Azure Key Vault libraries in the Python application code.
+
+#### Example Modified Application Code 
+
+```python
+
+from azure.identity import ManagedIdentityCredential
+from azure.keyvault.secrets import SecretClient
+import pyodbc
+import os
+
+# Key Vault url and credential
+key_vault_url = "https://aks-cluster-kv-luke.vault.azure.net/"
+credential = ManagedIdentityCredential()
+
+# Create key vault client
+secret_client = SecretClient(vault_url=key_vault_url, credential=credential)
+
+# Access secret values from key vault   
+server = secret_client.get_secret("server-name").value
+username = secret_client.get_secret("server-username").value
+password = secret_client.get_secret("server-password").value
+database = secret_client.get_secret("database-name").value
+```
+
+## DevOps Pipeline Architecture
+
+![image](https://github.com/lukerobinson98/Web-App-DevOps-Project/assets/150971337/79be77ce-3032-46f6-b047-aefadf2299b4)
+
+
 ### Usage
 
 To run the application, you simply need to run the `app.py` script in this repository. Once the application starts you should be able to access it locally at `http://127.0.0.1:5000`. Here you will be meet with the following two pages:
